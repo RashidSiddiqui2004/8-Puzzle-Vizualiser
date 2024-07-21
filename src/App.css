@@ -1,0 +1,21 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+@font-face {
+  font-family: raleway;
+  src: url(/src/assets/Raleway.ttf);
+}
+
+@font-face {
+  font-family: raleway-italic;
+  src: url(/src/assets/Raleway-Italic.ttf);
+}
+
+.text-raleway {
+  font-family: raleway;
+}
+ 

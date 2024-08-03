@@ -2,8 +2,8 @@ import { SparklesCore } from "../ui/sparkles";
 
 const AppName = () => {
     return (
-        <div className="w-full bg-black flex flex-col items-center justify-center overflow-hidden rounded-md">
-            <h1 className="md:text-7xl text-3xl lg:text-6xl font-bold text-center text-white relative z-20">
+        <div className="w-full bg-black flex text-pretty text-raleway flex-col items-center justify-center overflow-hidden rounded-md">
+            <h1 className="md:text-7xl text-5xl lg:text-6xl font-bold text-center text-white relative z-20">
                 8-Puzzle Game
             </h1>
             <div className="w-[60rem] h-20 relative">

@@ -4,6 +4,7 @@ import Slider from './Slider';
 import MoveButtons from './MoveButtons';
 
 interface ToolkitProps {
+    isStopState: boolean;
     onStop: () => void;
     initialMaxEpochs: number;
     initialTimeBetweenEpochs: number;
@@ -12,6 +13,7 @@ interface ToolkitProps {
 }
 
 const Toolkit: React.FC<ToolkitProps> = ({
+    isStopState,
     onStop,
     initialMaxEpochs,
     initialTimeBetweenEpochs,
@@ -33,7 +35,7 @@ const Toolkit: React.FC<ToolkitProps> = ({
 
     return (
         <div className="p-4 mt-2 rounded shadow-md flex flex-col items-center text-white">
-            <MoveButtons label="Stop Search" onClick={onStop} />
+            <MoveButtons label={`${isStopState ? 'Start' : 'Stop'} Search`} onClick={onStop} />
             <div className='flex flex-row'>
                 <div className='h-auto'>
                     <Slider

@@ -21,7 +21,7 @@ const About8Puzzle = () => {
 
             <TextGenerateEffect words={generalIntro} />
 
-            <img src={poster} alt="8-Puzzle Problem" className="flex mx-[20vw] text-center items-center justify-center" />
+            <img src={poster} alt="8-Puzzle Problem" className="flex my-3 md:my-1 md:mx-[20vw] text-center items-center justify-center" />
             <a href="https://www.javatpoint.com/8-puzzle-problem-in-python" target="_blank" className=" text-center text-xs"><h2>Image Source (javatpoint)</h2></a>
 
             <h1 className="text-3xl font-extrabold text-gray-200 my-6">What is 8 Puzzle Problem in AI and Its Relevance?</h1>

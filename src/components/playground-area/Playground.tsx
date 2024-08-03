@@ -41,6 +41,8 @@ const Playground = () => {
         [0, 5, 8]
     ]);
 
+
+
     const handleMove = (direction: string) => {
         const emptyCell = algorithms.findEmptyCell(initialState);
         if (!emptyCell) {
@@ -125,14 +127,14 @@ const Playground = () => {
         setInitialState(initialGridHard);
     };
 
-    const handleSolveByBFS = (maxEpochs: number, timeBetweenEpochs: number) => {
-        algorithms.bfsSearch(initialState, setInitialState, goalState, maxEpochs, timeBetweenEpochs);
+    const handleSolveByBFS = (maxEpochs: number, timeBetweenEpochs: number, isStopRef: React.MutableRefObject<boolean>) => {
+        algorithms.bfsSearch(initialState, setInitialState, goalState, maxEpochs, timeBetweenEpochs, isStopRef);
     };
-    const handleSolveByDFS = (maxEpochs: number, timeBetweenEpochs: number) => {
-        algorithms.dfsSearch(initialState, setInitialState, goalState, maxEpochs, timeBetweenEpochs);
+    const handleSolveByDFS = (maxEpochs: number, timeBetweenEpochs: number, isStopRef: React.MutableRefObject<boolean>) => {
+        algorithms.dfsSearch(initialState, setInitialState, goalState, maxEpochs, timeBetweenEpochs, isStopRef);
     };
-    const handleSolveByA_Star = (maxEpochs: number, timeBetweenEpochs: number) => {
-        algorithms.a_Star_Search(initialState, setInitialState, goalState, maxEpochs, timeBetweenEpochs);
+    const handleSolveByA_Star = (maxEpochs: number, timeBetweenEpochs: number, isStopRef: React.MutableRefObject<boolean>) => {
+        algorithms.a_Star_Search(initialState, setInitialState, goalState, maxEpochs, timeBetweenEpochs, isStopRef);
     };
 
     const handleReset = () => {
@@ -166,10 +168,11 @@ const Playground = () => {
                 <div className="text-red-500 font-semibold flex justify-normal  ml-[35vw]
                  mb-2 bg-slate-950 py-3 px-16 rounded-3xl text-xs
                  w-fit text-center items-center">{error}</div> :
-                <div className="text-white font-semibold flex justify-normal ml-[35vw]
-                 mb-2 bg-slate-950 py-3 px-16 rounded-3xl text-xs
-                 w-fit text-center items-center">{cheer}</div>
+                <div className="text-white font-semibold flex justify-center text-center md:ml-[35vw]
+                 mb-2 bg-slate-950 py-3 px-1 md:px-16 rounded-3xl text-xs
+                 w-full md:w-fit items-center">{cheer}</div>
             }
+
             {showSuccess && (
                 <div className="h-screen flex items-center justify-center z-20 absolute text-center mx-[20vw]">
                     <SuccessCard message={successMessage} handleShowSuccess={setShowSuccess} />
@@ -180,14 +183,16 @@ const Playground = () => {
                 <NewInitialState onSubmit={handleSubmit} onCancel={handleCloseModal} grid={initialState} setgrid={setInitialState} />
             )}
 
-
-            <Link to={'/8-puzzle-game-about'} className="fixed right-5 top-4 flex gap-1"><FaPlaystation className="text-4xl"></FaPlaystation><span className="text-sm mt-0">Know More</span></Link>
+            {/* know more button */}
+            <Link to={'/8-puzzle-game-about'} className="fixed right-5 top-2 md:top-4 flex gap-1">
+                <FaPlaystation className="hidden md:block md:text-4xl"></FaPlaystation><span className="mt-0">Know More</span>
+            </Link>
 
 
             <div
-                className={`mt-10 h-full grid grid-cols-6 -z-10 ${showSuccess ? 'blur-sm' : ''}`}>
+                className={`mt-10 h-full lg:grid lg:grid-cols-6 -z-10 ${showSuccess ? 'blur-sm' : ''}`}>
 
-                <div className="col-span-2">
+                <div className="col-span-2 mb-4 md:mb-0">
                     <GamePlayMenuBar
                         onNewGame={handleNewGame}
                         onShuffle={handleShuffle}
@@ -203,7 +208,7 @@ const Playground = () => {
                     <Grid grid={initialState} />
                 </div>
 
-                <div className="mt-6 gap-0 max-w-[20vw] col-span-2">
+                <div className="mt-6 gap-0 md:max-w-[20vw] col-span-2">
                     <div>
                         <MoveButtons label="Up" onClick={() => handleMove('up')} />
                     </div>

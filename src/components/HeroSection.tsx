@@ -19,7 +19,7 @@ export function HeroSection() {
                     duration: 0.5,
                     ease: [0.4, 0.0, 0.2, 1],
                 }}
-                className="text-2xl px-4 md:text-4xl lg:text-3xl text-white font-bold text-raleway dark:text-white max-w-4xl leading-relaxed lg:leading-snug text-center mx-auto "
+                className="text-xl px-4 md:text-4xl lg:text-3xl text-white font-bold text-raleway dark:text-white max-w-4xl leading-relaxed lg:leading-snug text-center mx-auto "
             >
                 Life is a puzzle, and every move counts. Embrace the challenge, and {" "}
                 <Highlight className="text-black dark:text-white">

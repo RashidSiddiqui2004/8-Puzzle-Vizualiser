@@ -1,25 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Toolkit from './Toolkit';
 
 interface SidebarProps {
     onNewGame: () => void;
     onShuffle: () => void;
     onOpenInitialStateModal: () => void;
-    onSolveByBFS: (maxEpochs: number, timeBetweenEpochs: number) => void;
-    onSolveByDFS: (maxEpochs: number, timeBetweenEpochs: number) => void;
-    onSolveByA_Star: (maxEpochs: number, timeBetweenEpochs: number) => void;
+    onSolveByBFS: (maxEpochs: number, timeBetweenEpochs: number, isStopRef: React.MutableRefObject<boolean>) => void;
+    onSolveByDFS: (maxEpochs: number, timeBetweenEpochs: number, isStopRef: React.MutableRefObject<boolean>) => void;
+    onSolveByA_Star: (maxEpochs: number, timeBetweenEpochs: number, isStopRef: React.MutableRefObject<boolean>) => void;
     onReset: () => void;
     grid: number[][]
 }
 
 const GamePlayMenuBar: React.FC<SidebarProps> = ({ onNewGame, onOpenInitialStateModal, onReset, onSolveByBFS, onSolveByDFS, onSolveByA_Star }) => {
 
+    const [isStopState, setIsStopState] = useState(false);
+    const isStopRef = useRef(isStopState);
     const [maxEpochs, setMaxEpochs] = useState(20);
     const [timeBetweenEpochs, setTimeBetweenEpochs] = useState(1000);
-
-    const handleStop = () => {
-        console.log('Stop button clicked');
-    };
 
     const handleMaxEpochsChange = (value: number) => {
         setMaxEpochs(value);
@@ -29,8 +27,17 @@ const GamePlayMenuBar: React.FC<SidebarProps> = ({ onNewGame, onOpenInitialState
         setTimeBetweenEpochs(value);
     };
 
+    const stopAlgorithm = () => {
+        setIsStopState(!isStopState);
+    }
 
     const [showAIOption, setShowAIOptions] = useState(false);
+
+    useEffect(() => {
+        isStopRef.current = isStopState;
+    }, [isStopState]);
+
+
     return (
 
         <div className="text-white flex flex-col items-center rounded-2xl">
@@ -43,9 +50,9 @@ const GamePlayMenuBar: React.FC<SidebarProps> = ({ onNewGame, onOpenInitialState
                     <div className="relative">
                         <div className="absolute top-0 left-full ml-2 w-60 text-white flex flex-col rounded-xl shadow-lg *:space-y-2 p-2">
                             <Button label='Choose an Algorithm' isHeader={true}></Button>
-                            <Button label="Breadth First Search" onClick={() => { onSolveByBFS(maxEpochs, timeBetweenEpochs) }} />
-                            <Button label="Depth First Search" onClick={() => { onSolveByDFS(maxEpochs, timeBetweenEpochs) }} />
-                            <Button label="A* Algorithm" onClick={() => { onSolveByA_Star(maxEpochs, timeBetweenEpochs) }} />
+                            <Button label="Breadth First Search" onClick={() => { onSolveByBFS(maxEpochs, timeBetweenEpochs, isStopRef) }} />
+                            <Button label="Depth First Search" onClick={() => { onSolveByDFS(maxEpochs, timeBetweenEpochs, isStopRef) }} />
+                            <Button label="A* Algorithm" onClick={() => { onSolveByA_Star(maxEpochs, timeBetweenEpochs, isStopRef) }} />
                         </div>
                     </div>
                 )}
@@ -56,7 +63,8 @@ const GamePlayMenuBar: React.FC<SidebarProps> = ({ onNewGame, onOpenInitialState
 
             {showAIOption &&
                 <Toolkit
-                    onStop={handleStop}
+                    isStopState={isStopState}
+                    onStop={stopAlgorithm}
                     initialMaxEpochs={maxEpochs}
                     initialTimeBetweenEpochs={timeBetweenEpochs}
                     onMaxEpochsChange={handleMaxEpochsChange}

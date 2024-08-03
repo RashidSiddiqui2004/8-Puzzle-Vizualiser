@@ -1,3 +1,4 @@
+
 const findEmptyCell = (grid: number[][]): { row: number, col: number } | null => {
     for (let i = 0; i < grid.length; i++) {
         for (let j = 0; j < grid[i].length; j++) {
@@ -39,6 +40,10 @@ const applyMove = (grid: number[][], move: Move): number[][] => {
 };
 
 
+const isGoalState = (grid: number[][], goalState: number[][]): boolean => {
+    return JSON.stringify(grid) === JSON.stringify(goalState);
+};
+
 // create a queue and push grid states in the queue.
 // pop the front, and use MoveGen() function to get all new states
 // just a general BFS algorithm
@@ -47,12 +52,12 @@ const applyMove = (grid: number[][], move: Move): number[][] => {
 // we also need to show the current state of the grid to user dynamically
 // so update the state continuously
 
-const bfsSearch = async (initialGrid: number[][], updateGrid: (grid: number[][]) => void, goalState: number[][], maxEpochs: number,timeBetweenEpochs:number) => {
+const bfsSearch = async (initialGrid: number[][], updateGrid: (grid: number[][]) => void, goalState: number[][], maxEpochs: number, timeBetweenEpochs: number, isStopRef: React.MutableRefObject<boolean>) => {
     const start = JSON.stringify(initialGrid);
     const queue: number[][][] = [initialGrid];
     const visited = new Set([start]);
 
-    while (queue.length > 0) {
+    while (queue.length > 0 && isStopRef.current === false) {
         const grid = queue.shift()!;
         const emptyCell = findEmptyCell(grid);
         if (!emptyCell) continue;
@@ -88,37 +93,14 @@ const bfsSearch = async (initialGrid: number[][], updateGrid: (grid: number[][])
     }
 };
 
-const isGoalState = (grid: number[][], goalState: number[][]): boolean => {
-    return JSON.stringify(grid) === JSON.stringify(goalState);
-};
 
-const manhattanDistance = (grid: number[][], goal: number[][]): number => {
-    let distance = 0;
-    for (let i = 0; i < grid.length; i++) {
-        for (let j = 0; j < grid[i].length; j++) {
-            const value = grid[i][j];
-            if (value !== 0) {
-                for (let m = 0; m < goal.length; m++) {
-                    for (let n = 0; n < goal[m].length; n++) {
-                        if (goal[m][n] === value) {
-                            distance += Math.abs(i - m) + Math.abs(j - n);
-                        }
-                    }
-                }
-            }
-        }
-    }
-    return distance;
-};
-
-
-const dfsSearch = async (initialGrid: number[][], updateGrid: (grid: number[][]) => void, goalState: number[][], maxEpochs: number, timeBetweenEpochs: number) => {
+const dfsSearch = async (initialGrid: number[][], updateGrid: (grid: number[][]) => void, goalState: number[][], maxEpochs: number, timeBetweenEpochs: number, isStopRef: React.MutableRefObject<boolean>) => {
     const stack: number[][][] = [initialGrid];
     const visited = new Set([JSON.stringify(initialGrid)]);
 
-    while (stack.length > 0) {
+    while (stack.length > 0 && isStopRef.current === false) {
         const grid = stack.pop()!;
-        if (isGoalState(grid,goalState)) {
+        if (isGoalState(grid, goalState)) {
             updateGrid(grid);
             return;
         }
@@ -158,7 +140,26 @@ interface Node {
     totalCost: number;
 }
 
-const a_Star_Search = async (initialGrid: number[][], updateGrid: (grid: number[][]) => void, goalState: number[][], maxEpochs: number, timeBetweenEpochs: number) => {
+const manhattanDistance = (grid: number[][], goal: number[][]): number => {
+    let distance = 0;
+    for (let i = 0; i < grid.length; i++) {
+        for (let j = 0; j < grid[i].length; j++) {
+            const value = grid[i][j];
+            if (value !== 0) {
+                for (let m = 0; m < goal.length; m++) {
+                    for (let n = 0; n < goal[m].length; n++) {
+                        if (goal[m][n] === value) {
+                            distance += Math.abs(i - m) + Math.abs(j - n);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return distance;
+};
+
+const a_Star_Search = async (initialGrid: number[][], updateGrid: (grid: number[][]) => void, goalState: number[][], maxEpochs: number, timeBetweenEpochs: number, isStopRef: React.MutableRefObject<boolean>) => {
     const priorityQueue: Node[] = [{
         grid: initialGrid,
         cost: 0,
@@ -168,12 +169,12 @@ const a_Star_Search = async (initialGrid: number[][], updateGrid: (grid: number[
 
     const visited = new Set([JSON.stringify(initialGrid)]);
 
-    while (priorityQueue.length > 0) {
+    while (priorityQueue.length > 0 && isStopRef.current === false) {
         priorityQueue.sort((a, b) => a.totalCost - b.totalCost);
         const currentNode = priorityQueue.shift()!;
         const { grid, cost } = currentNode;
 
-        if (isGoalState(grid,goalState)) {
+        if (isGoalState(grid, goalState)) {
             updateGrid(grid);
             return;
         }
@@ -203,9 +204,9 @@ const a_Star_Search = async (initialGrid: number[][], updateGrid: (grid: number[
                     heuristic: newHeuristic,
                     totalCost: newCost + newHeuristic
                 });
- 
+
                 updateGrid(newGrid);
- 
+
                 await new Promise(resolve => setTimeout(resolve, timeBetweenEpochs));
             }
         }
